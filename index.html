@@ -107,17 +107,24 @@
             font-size: 10.5pt;
             color: #334155;
             word-wrap: break-word;
+            white-space: pre-wrap;
+            position: relative;
         }
-        .lang-tag {
+
+        .copy-btn {
             display: inline-block;
             background: #ef4444;
             color: white;
-            padding: 2px 8px;
+            padding: 4px 10px;
             border-radius: 4px;
             font-size: 9pt;
             font-weight: bold;
             margin-bottom: 8px;
+            cursor: pointer;
+            border: none;
+            transition: background 0.2s;
         }
+        .copy-btn:active { background: #10b981; }
 
         .back-to-top {
             display: inline-block;
@@ -139,8 +146,23 @@
             cursor: pointer;
         }
 
+        /* Melding na kopiëren */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #334155;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 10pt;
+            display: none;
+            z-index: 1000;
+        }
+
         @media print {
-            .no-print, .selector-container, .back-to-top, .home-screen-tip, .explanation { display: none !important; }
+            .no-print, .selector-container, .back-to-top, .home-screen-tip, .explanation, .copy-btn { display: none !important; }
             body { background-color: white; padding: 0; }
             section { border: 1px solid #eee; margin-bottom: 20px; }
         }
@@ -154,8 +176,8 @@
 
 <div class="user-guide">
     <h3>📖 Gebruikersgids / Guida per l'utente</h3>
-    <p><strong>NL:</strong> AI is objectief en heeft toegang tot gigantische hoeveelheden geverifieerde data. Gebruik deze tool om beweringen in video's te staven of te ontkrachten.</p>
-    <p><strong>IT:</strong> L'IA è oggettiva e ha accesso a enormi quantità di dati verificati. Usa questo strumento per confermare o smentire le affermazioni nei video.</p>
+    <p><strong>NL:</strong> Klik op de rode knop boven een tekst om deze direct te kopiëren. Plak de tekst daarna in je AI-app.</p>
+    <p><strong>IT:</strong> Clicca sul pulsante rosso sopra un testo per copiarlo direttamente. Poi incollalo nella tua app IA.</p>
     
     <div class="home-screen-tip">
         <strong>📱 Tip: Zet deze tool op je startscherm:</strong><br>
@@ -170,103 +192,116 @@
 <nav class="selector-container">
     <a href="#optionA" class="option-card">
         <span class="option-title">Optie A: Transcriptie</span>
-        <p>Voor maximale precisie.</p>
+        <p>Maximale precisie via tekst.</p>
     </a>
     <a href="#optionB" class="option-card">
         <span class="option-title">Optie B: Video Link</span>
-        <p>Snel via de URL.</p>
+        <p>Snel via de YouTube URL.</p>
     </a>
     <a href="#optionC" class="option-card">
         <span class="option-title">Optie C: Expertise</span>
-        <p>Check de spreker.</p>
+        <p>Check wie de spreker echt is.</p>
     </a>
 </nav>
 
 <section id="optionA">
     <h2>1. Optie A: Transcriptie / Trascrizione</h2>
     <div class="explanation">
-        <strong>NL:</strong> Waarom? Dit is de meest nauwkeurige methode. Door de tekst direct te plakken, dwing je de AI om elk woord te analyseren zonder afhankelijk te zijn van externe links.<br>
-        <strong>IT:</strong> Perché? Questo è il metodo più accurato. Incollando il testo, costringi l'IA ad analizzare ogni parola senza dipendere da link esterni.
+        <strong>NL:</strong> Meest nauwkeurig. De AI analyseert elk woord.<br>
+        <strong>IT:</strong> Il metodo più accurato. L'IA analizza ogni parola.
     </div>
-    <div class="prompt-box">
-        <span class="lang-tag">NL</span><br>
-        ​"Analyseer de volgende tekst/transcriptie kritisch met het doel om manipulatie en onwaarheden bloot te leggen:
-​Feitencheck: Welke beweringen in deze tekst kloppen niet met de werkelijkheid? Zet de feiten er direct tegenover.
-​Taalgebruik & Trucs: Welke overtuigingstechnieken gebruikt de schrijver/spreker? Let op zwart-wit denken, inspelen op angst of onzekerheid, en het gebruik van 'wij-tegen-zij' taal.
-​Logische Gaten: Waar rammelt de redenering? Wijs de drogredenen aan (bijvoorbeeld: dingen beweren zonder bewijs).
-​Schrijfstijl: Gebruik directe, begrijpelijke taal die aansluit bij jongeren en jongvolwassenen. Wees niet belerend, maar laat de feiten het werk doen zodat de lezer zelf inziet dat deze informatie onbetrouwbaar is.
-​Tekst: [PLAK HIER DE TEKST]"
-    </div>
-    <div class="prompt-box">
-        <span class="lang-tag">IT</span><br>
-        ​"Analizza criticamente il seguente testo/trascrizione con l'obiettivo di smascherare manipolazioni e falsità:
-​Fact-checking: Quali affermazioni in questo testo non corrispondono alla realtà? Contrapponi direttamente i fatti reali.
-​Linguaggio e Trucchi: Quali tecniche di persuasione usa l'autore/relatore? Presta attenzione al pensiero 'bianco o nero', alla manipolazione della paura o dell'incertezza e all'uso di un linguaggio 'noi contro loro'.
-​Lacune Logiche: Dove vacilla il ragionamento? Indica le fallacie logiche (ad esempio: fare affermazioni senza fornire prove).
-​Stile di scrittura: Usa un linguaggio diretto e comprensibile, adatto a ragazzi e giovani adulti. Non essere pedante, ma lascia che siano i fatti a parlare, in modo che il lettore capisca da solo che queste informazioni sono inattendibili.
-​Testo: [INCOLLA QUI IL TESTO]"
-</div>
-    <a href="#top" class="back-to-top">↑ Terug naar boven / Torna su</a>
+    
+    <button class="copy-btn" onclick="copyText('promptA_nl')">NL (Kopieer)</button>
+    <div class="prompt-box" id="promptA_nl">Analyseer de volgende tekst/transcriptie kritisch met het doel om manipulatie en onwaarheden bloot te leggen:
+Feitencheck: Welke beweringen in deze tekst kloppen niet met de werkelijkheid? Zet de feiten er direct tegenover.
+Taalgebruik & Trucs: Welke overtuigingstechnieken gebruikt de schrijver/spreker? Let op zwart-wit denken, inspelen op angst of onzekerheid, en het gebruik van 'wij-tegen-zij' taal.
+Logische Gaten: Waar rammelt de redenering? Wijs de drogredenen aan (bijvoorbeeld: dingen beweren zonder bewijs).
+Schrijfstijl: Gebruik directe, begrijpelijke taal die aansluit bij jongeren en jongvolwassenen. Wees niet belerend, maar laat de feiten het werk doen zodat de lezer zelf inziet dat deze informatie onbetrouwbaar is.
+Tekst: [PLAK HIER DE TEKST]</div>
+
+    <button class="copy-btn" onclick="copyText('promptA_it')">IT (Copia)</button>
+    <div class="prompt-box" id="promptA_it">Analizza criticamente il seguente testo/trascrizione con l'obiettivo di smascherare manipolazioni e falsità:
+Fact-checking: Quali affermazioni in questo testo non corrispondono alla realtà? Contrapponi direttamente i fatti reali.
+Linguaggio e Trucchi: Quali tecniche di persuasione usa l'autore/relatore? Presta attenzione al pensiero 'bianco o nero', alla manipolazione della paura o dell'incertezza e all'uso di un linguaggio 'noi contro loro'.
+Lacune Logiche: Dove vacilla il ragionamento? Indica le fallacie logiche (ad esempio: fare affermazioni senza fornire prove).
+Stile di scrittura: Usa un linguaggio diretto e comprensibile, adatto a ragazzi e giovani adulti. Non essere pedante, ma lascia che siano i fatti a parlare, in modo che il lettore capisca da solo che queste informazioni sono inattendibili.
+Testo: [INCOLLA QUI IL TESTO]</div>
+    
+    <a href="#top" class="back-to-top">↑ Terug naar boven</a>
 </section>
 
 <section id="optionB">
     <h2>2. Optie B: Video Link / Link Video</h2>
     <div class="explanation">
-        <strong>NL:</strong> Waarom? Sneller voor kort overzicht. Werkt het best in Google Gemini, omdat YouTube en Gemini beide van Google zijn en nauw samenwerken.<br>
-        <strong>IT:</strong> Perché? Più veloce per una panoramica. Funziona meglio in Google Gemini, poiché YouTube e Gemini appartengono entrambi a Google e collaborano strettamente.
+        <strong>NL:</strong> Werkt optimaal in Google Gemini voor YouTube video's.<br>
+        <strong>IT:</strong> Funziona al meglio in Google Gemini per i video di YouTube.
     </div>
-    <div class="prompt-box">
-        <span class="lang-tag">NL</span><br>
-        Bekijk de video op deze link: [LINK]. Analyseer de inhoud met de focus op het blootleggen van manipulatie en onwaarheden.
-​Gebruik hiervoor de volgende aanpak:
-​De 'Reality Check': Vergelijk de beweringen in de video met harde feiten en wetenschappelijke consensus. Wijs specifiek aan waar de spreker de bocht uitvliegt.
-​De Masker-test: Wie is de spreker echt? Controleer of deze persoon werkelijk de diploma's of ervaring heeft om over dit onderwerp te praten, of dat het slechts 'geleende autoriteit' is.
-​De Trucs van de Influencer: Identificeer welke psychologische trucs of drogredenen er worden gebruikt (zoals inspelen op onzekerheid, zwart-wit denken of het creëren van een wij-tegen-zij gevoel).
-​De Confrontatie: Leg uit wat het werkelijke doel van de video lijkt te zijn (bijv. aandacht, verkoop van een imago of macht).
-​Belangrijke instructie voor de schrijfstijl:
-Schrijf je antwoord in duidelijke, directe taal die aansluit bij de belevingswereld van jongeren en jongvolwassenen. Vermijd stoffig taalgebruik. Wees niet belerend, maar toon de feiten op zo'n manier dat de kijker zelf de conclusie trekt: 'Ik word hier voor de gek gehouden'. Gebruik korte zinnen en heldere voorbeelden."
-    <div class="prompt-box">
-        <span class="lang-tag">IT</span><br>
-        ​"Guarda il video a questo link: [LINK]. Analizza il contenuto concentrandoti sullo smascheramento di manipolazioni e falsità. Usa il seguente approccio:
-​Il 'Reality Check': Confronta le affermazioni nel video con fatti concreti e il consenso scientifico. Indica specificamente dove il relatore 'va fuori strada'.
-​Il Test della Maschera: Chi è davvero il relatore? Verifica se questa persona ha realmente i titoli di studio o l'esperienza per parlare di questo argomento, o se si tratta solo di 'autorità presa in prestito'.
-​I Trucchi dell'Influencer: Identifica quali trucchi psicologici o fallacie logiche vengono utilizzati (come fare leva sull'insicurezza, il pensiero radicale o la creazione di un sentimento 'noi contro loro').
-​Il Confronto: Spiega quale sembra essere il vero scopo del video (ad esempio: ottenere attenzione, vendere un'immagine o acquisire potere).
-​Istruzione importante per lo stile di scrittura: Scrivi la tua risposta in un linguaggio chiaro e diretto che si adatti al mondo dei giovani e dei giovani adulti. Evita un linguaggio accademico o noioso. Non essere paternale, ma mostra i fatti in modo tale che lo spettatore giunga da solo alla conclusione: 'Mi stanno prendendo in giro'. Usa frasi brevi ed esempi chiari."
-    </div>
-    <a href="#top" class="back-to-top">↑ Terug naar boven / Torna su</a>
+
+    <button class="copy-btn" onclick="copyText('promptB_nl')">NL (Kopieer)</button>
+    <div class="prompt-box" id="promptB_nl">Bekijk de video op deze link: [LINK]. Analyseer de inhoud met de focus op het blootleggen van manipulatie en onwaarheden.
+Gebruik hiervoor de volgende aanpak:
+De 'Reality Check': Vergelijk de beweringen in de video met harde feiten en wetenschappelijke consensus. Wijs specifiek aan waar de spreker de bocht uitvliegt.
+De Masker-test: Wie is de spreker echt? Controleer of deze persoon werkelijk de diploma's of ervaring heeft om over dit onderwerp te praten, of dat het slechts 'geleende autoriteit' is.
+De Trucs van de Influencer: Identificeer welke psychologische trucs of drogredenen er worden gebruikt (zoals inspelen op onzekerheid, zwart-wit denken of het creëren van een wij-tegen-zij gevoel).
+De Confrontatie: Leg uit wat het werkelijke doel van de video lijkt te zijn (bijv. aandacht, verkoop van een imago of macht).
+Belangrijke instructie voor de schrijfstijl:
+Schrijf je antwoord in duidelijke, directe taal die aansluit bij de belevingswereld van jongeren en jongvolwassenen. Vermijd stoffig taalgebruik. Wees niet belerend, maar toon de feiten op zo'n manier dat de kijker zelf de conclusie trekt: 'Ik word hier voor de gek gehouden'. Gebruik korte zinnen en heldere voorbeelden.</div>
+
+    <button class="copy-btn" onclick="copyText('promptB_it')">IT (Copia)</button>
+    <div class="prompt-box" id="promptB_it">Guarda il video a questo link: [LINK]. Analizza il contenuto concentrandoti sullo smascheramento di manipolazioni e falsità. Usa il seguente approccio:
+Il 'Reality Check': Confronta le affermazioni nel video con fatti concreti e il consenso scientifico. Indica specificamente dove il relatore 'va fuori strada'.
+Il Test della Maschera: Chi è davvero il relatore? Verifica se questa persona ha realmente i titoli di studio o l'esperienza per parlare di questo argomento, o se si tratta solo di 'autorità presa in prestito'.
+I Trucchi dell'Influencer: Identifica quali trucchi psicologici o fallacie logiche vengono utilizzati (come fare leva sull'insicurezza, il pensiero radicale o la creazione di un sentimento 'noi contro loro').
+Il Confronto: Spiega quale sembra essere il vero scopo del video (ad esempio: ottenere attenzione, vendere un'immagine o acquisire potere).
+Istruzione importante per lo stile di scrittura: Scrivi la tua risposta in un linguaggio chiaro e diretto che si adatti al mondo dei giovani e dei giovani adulti. Evita un linguaggio accademico o noioso. Non essere paternale, ma mostra i fatti in modo tale che lo spettatore giunga da solo alla conclusione: 'Mi stanno prendendo in giro'. Usa frasi brevi ed esempi chiari.</div>
+
+    <a href="#top" class="back-to-top">↑ Terug naar boven</a>
 </section>
 
 <section id="optionC">
-    <h2>3. Optie C: Diepe Expertise Check / Controllo Competenze</h2>
+    <h2>3. Optie C: Expertise Check / Controllo Esperto</h2>
     <div class="explanation">
-        <strong>NL:</strong> Waarom? Om te voorkomen dat een 'leek' je overtuigt met onjuiste informatie. AI vergelijkt de spreker met wereldwijde databases om hun achtergrond te controleren.<br>
-        <strong>IT:</strong> Perché? Per evitare che un 'profano' ti convinca con informazioni errate. L'IA confronta il relatore con i database globali.
+        <strong>NL:</strong> Ontmasker of de spreker wel echt gekwalificeerd is.<br>
+        <strong>IT:</strong> Smaschera se il relatore è veramente qualificato.
     </div>
-    <div class="prompt-box">
-        <span class="lang-tag">NL</span><br>
-        ​"Onderzoek de geloofwaardigheid en expertise van de spreker in deze video/tekst:
-​Wie is dit echt? Zoek uit wat de professionele achtergrond, opleiding en diploma's van deze persoon zijn.
-​Schoenmaker, blijf bij je leest: Praat deze persoon over een onderwerp waar hij/zij werkelijk voor gestudeerd heeft, of is het iemand die simpelweg een sterke mening verkoopt zonder onderliggende kennis?
-​Geleende Autoriteit: Gebruikt de spreker moeilijke termen of een zelfverzekerde houding om deskundig over te komen, terwijl de feiten ontbreken?
-​Belangen: Heeft deze persoon er financieel of sociaal baat bij om deze boodschap te verspreiden?
-​Schrijfstijl: Leg dit uit op een heldere, nuchtere manier die doordringt bij jongeren. Maak duidelijk dat een groot aantal volgers op sociale media niet hetzelfde is als het hebben van verstand van zaken. Laat de gebruiker zelf de conclusie trekken over de betrouwbaarheid van deze 'expert'."
-    </div>
-    <div class="prompt-box">
-        <span class="lang-tag">IT</span><br>
-        ​"Indaga sulla credibilità e sulla competenza del relatore in questo video/testo:
-​Chi è costui veramente? Scopri qual è il background professionale, l'istruzione e i titoli di studio di questa persona.
-​'Sarto, non andare oltre la scarpa' (Competenza): Questa persona parla di un argomento per cui ha studiato realmente, o è qualcuno che vende semplicemente una forte opinione senza avere conoscenze di base?
-​Autorità Presa in Prestito: Il relatore usa termini difficili o un atteggiamento molto sicuro di sé per apparire esperto, mentre mancano i fatti?
-​Interessi: Questa persona trae un vantaggio economico o sociale nel diffondere questo messaggio?
-​Stile di scrittura: Spiega tutto questo in modo chiaro e pragmatico, che faccia colpo sui giovani. Metti in chiaro che un gran numero di follower sui social media non equivale ad avere competenza in materia. Lascia che sia l'utente a trarre le proprie conclusioni sull'affidabilità di questo 'esperto'."
-    </div>
-    <a href="#top" class="back-to-top">↑ Terug naar boven / Torna su</a>
+
+    <button class="copy-btn" onclick="copyText('promptC_nl')">NL (Kopieer)</button>
+    <div class="prompt-box" id="promptC_nl">Onderzoek de geloofwaardigheid en expertise van de spreker in deze video/tekst:
+Wie is dit echt? Zoek uit wat de professionele achtergrond, opleiding en diploma's van deze persoon zijn.
+Schoenmaker, blijf bij je leest: Praat deze persoon over een onderwerp waar hij/zij werkelijk voor gestudeerd heeft, of is het iemand die simpelweg een sterke mening verkoopt zonder onderliggende kennis?
+Geleende Autoriteit: Gebruikt de spreker moeilijke termen of een zelfverzekerde houding om deskundig over te komen, terwijl de feiten ontbreken?
+Belangen: Heeft deze persoon er financieel of sociaal baat bij om deze boodschap te verspreiden?
+Schrijfstijl: Leg dit uit op een heldere, nuchtere manier die doordringt bij jongeren. Maak duidelijk dat een groot aantal volgers op sociale media niet hetzelfde is als het hebben van verstand van zaken. Laat de gebruiker zelf de conclusie trekken over de betrouwbaarheid van deze 'expert'.</div>
+
+    <button class="copy-btn" onclick="copyText('promptC_it')">IT (Copia)</button>
+    <div class="prompt-box" id="promptC_it">Indaga sulla credibilità e sulla competenza del relatore in questo video/testo:
+Chi è costui veramente? Scopri qual è il background professionale, l'istruzione e i titoli di studio di questa persona.
+'Sarto, non andare oltre la scarpa' (Competenza): Questa persona parla di un argomento per cui ha studiato realmente, o è qualcuno che vende semplicemente una forte opinione senza avere conoscenze di base?
+Autorità Presa in Prestito: Il relatore usa termini difficili o un atteggiamento molto sicuro di sé per apparire esperto, mentre mancano i fatti?
+Interessi: Questa persona trae un vantaggio economico o sociale nel diffondere questo messaggio?
+Stile di scrittura: Spiega tutto questo in modo chiaro e pragmatico, che faccia colpo sui giovani. Metti in chiaro che un gran numero di follower sui social media non equivale ad avere competenza in materia. Lascia che sia l'utente a trarre le proprie conclusioni sull'affidabilità di questo 'esperto'.</div>
+
+    <a href="#top" class="back-to-top">↑ Terug naar boven</a>
 </section>
+
+<div id="toast" class="toast">Gekopieerd! / Copiato!</div>
 
 <footer>
     <p style="text-align: center; color: #64748b; font-size: 9pt;">&copy; 2026 - Jan den Hollander - AI Fact-Checking Tool</p>
 </footer>
+
+<script>
+    function copyText(elementId) {
+        var text = document.getElementById(elementId).innerText;
+        navigator.clipboard.writeText(text).then(function() {
+            var toast = document.getElementById('toast');
+            toast.style.display = 'block';
+            setTimeout(function() {
+                toast.style.display = 'none';
+            }, 2000);
+        });
+    }
+</script>
 
 </body>
 </html>
