@@ -48,7 +48,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Fact-Checker">
     <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/png" href="icons/icon-192.png">
+    <link rel="icon" type="image/png" href="icons/favicon.png">
     <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
     <title>Shield AI: Fact-Checker</title>
     <style>
@@ -470,6 +470,15 @@ Stile di scrittura: Spiega tutto questo in modo chiaro e pragmatico, che faccia 
             setTimeout(function() {
                 toast.style.display = 'none';
             }, 2000);
+        });
+    }
+</script>
+<script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function () {
+            navigator.serviceWorker.register('sw.js').catch(function (err) {
+                console.warn('Service worker registratie mislukt:', err);
+            });
         });
     }
 </script>
